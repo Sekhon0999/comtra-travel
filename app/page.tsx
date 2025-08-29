@@ -7,6 +7,7 @@ type Row = { confidence: number; home?: { name?: string }; local?: { name?: stri
 export default function Home() {
   const [rows, setRows] = useState<Row[]>([]);
   const [err, setErr] = useState<string>();
+  const envOK = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   useEffect(() => {
     supabase
@@ -25,14 +26,24 @@ export default function Home() {
   return (
     <main style={{ padding: 24 }}>
       <h1>Comtra Travel Hub 🌍</h1>
-      {err && <p style={{ color: 'crimson' }}>Error: {err}</p>}
+
+      <div style={{ margin: '8px 0', padding: 12, border: '1px solid #ddd', borderRadius: 8 }}>
+        <strong>Environment:</strong> {envOK ? '✅ NEXT_PUBLIC vars detected' : '❌ Missing env vars'}
+      </div>
+
+      {err && (
+        <div style={{ margin: '8px 0', padding: 12, background: '#ffeaea', border: '1px solid #ffb3b3', borderRadius: 8 }}>
+          <strong>Error:</strong> {err}
+        </div>
+      )}
+
+      <h3>Brand Equivalents</h3>
       <ul>
         {rows.map((r, i) => (
-          <li key={i}>
-            {r.home?.name} → {r.local?.name} (confidence {r.confidence})
-          </li>
+          <li key={i}>{r.home?.name} → {r.local?.name} (confidence {r.confidence})</li>
         ))}
       </ul>
+
       {rows.length === 0 && !err && <p>Loading…</p>}
     </main>
   );
