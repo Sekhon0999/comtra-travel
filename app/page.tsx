@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { supabase } from 'lib/supabase';
+import { supabase } from '../lib/supabase';
 
 type Row = { confidence: number; home?: { name?: string }; local?: { name?: string } };
 
